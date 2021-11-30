@@ -1,0 +1,15 @@
+{
+  "name": "cat_dog_classifier",
+  "version": "1.0.0",
+  "main": "client/index.html",
+  "repository": "git@github.com:dylanlrrb/cat_dog_classifier.git",
+  "author": "dylanlrrb <dylan.r.larrabee@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "serve:backend": "rm -rf backend/static; cp -r client/ backend/static; python backend/main.py",
+    "serve:backend:ssl": "rm -rf backend/static; cp -r client/ backend/static; python backend/main.py ssl",
+    "deploy:model": "echo 'deploying model'"
+  },
+  "dependencies": {}
+}

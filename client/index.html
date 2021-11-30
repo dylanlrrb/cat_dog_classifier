@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+  </head>
+  <body id="body">
+    <div id="loader">
+      <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+    
+    <div id="title">
+      <h1>
+        Animal Classifier
+      </h1>
+      <small>
+        Photograph a 🐱 or a 🐶 
+      </small>
+      <small>
+        I will tell you which it is!
+      </small>
+    </div>
+    
+    
+    <div id="capture">
+      <div class="camera">
+        <video id="video" class="visually-hidden">Video stream not available.</video>
+      </div>
+      <canvas id="canvas" class="hidden">
+      </canvas>
+      <div id="controls">
+        <button id="startbutton" class="visually-hidden">Take photo</button>
+        <button id="retakebutton" class="hidden">Retake</button>
+        <button id="classifybutton" class="hidden">Classify</button>
+      </div>
+    </div>
+    <div id="resultspane" class="hidden">
+      <div class="output">
+        <img id="photo" alt="The screen capture will appear in this box.">
+      </div>
+      <p>I am <span id="certainty"></span>% sure</p>
+      <p>this is a <span id="animal"></span></p>
+    <br><br><br>
+      <button id="tryagainbutton">Try again</button>
+      <small>Classified in<small id="speed"></small>ms</small>
+    </div>
+
+    
+  </body>
+</html>
