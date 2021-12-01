@@ -9,7 +9,7 @@
   "scripts": {
     "serve:backend": "rm -rf backend/static; cp -r client/ backend/static; python backend/main.py",
     "serve:backend:ssl": "rm -rf backend/static; cp -r client/ backend/static; python backend/main.py ssl",
-    "deploy:model": "echo 'deploying model'"
+    "deploy:model": "python scripts/deploy_model.py"
   },
   "dependencies": {}
 }

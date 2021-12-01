@@ -1,3 +1,17 @@
+.DS_Store
+.vscode/
+
 .python-version
 backend/static
 notes.txt
+__pycache__/
+
+# Large directories used for storing training images
+datasets/
+checkpoint.pt
+# CDCI pipeline stuff
+container_cache/*/*
+!container_cache/**/README.md
+index.html
+error.html
+log.txt

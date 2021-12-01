@@ -33,7 +33,7 @@ function clearphoto() {
   // scroll to top
   window.scrollTo(0, 0);
 
-  var data = canvas.toDataURL('image/png');
+  var data = canvas.toDataURL('image/jpeg');
   photo.setAttribute('src', data);
 }
 

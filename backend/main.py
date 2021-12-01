@@ -1,6 +1,7 @@
-from flask import Flask, redirect, url_for, jsonify
+from flask import Flask, redirect, url_for, json, jsonify
 from waitress import serve
 import sys
+from classify import classify
 
 app = Flask(__name__)
 
@@ -9,14 +10,14 @@ def index():
     return redirect(url_for('static', filename='index.html'))
 
 @app.route("/classify")
-def main():
-  # functions should use model in the location it is written to in the model folder for consistency
-    return jsonify(
-        mapping={"1": "Cat 🐱", "2": "Dog 🐶"},
-        ranking=["2", "1"],
-        certainty=["67.9", "13.5"],
-        speed="823"
-    )
+def classify_image():
+  # write image to disk
+  
+  data = classify('./backend/cat.108.jpg')
+  print(data)
+  # remove image from disk
+  return jsonify(data)
+
 
 def main():
   if len(sys.argv) >= 2 and sys.argv[1] == 'ssl':
