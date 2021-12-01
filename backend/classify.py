@@ -52,7 +52,7 @@ def build_network(arch="vgg16", out_features=2, hidden_layers=[1000]):
     return model
 
 def load_model(path):
-    checkpoint = torch.load(path)
+    checkpoint = torch.load(path, map_location='cpu')
 
     arch = checkpoint['arch']
     out_features = len(checkpoint['class_to_idx'])
