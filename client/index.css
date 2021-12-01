@@ -6,7 +6,7 @@ body {
 div video, canvas, #photo {
   border-radius: 20px;
   box-shadow: 10px 5px 25px rgba(0, 0, 0, 0.336);
-  margin-bottom: 90px;
+  margin-bottom: 80px;
 }
 
 #controls {
@@ -19,7 +19,7 @@ div video, canvas, #photo {
   background-image: linear-gradient(#EF3D59, #E17A47, #EFC958);
   height: 100vh;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
 }
@@ -50,18 +50,19 @@ button {
 }
 
 #title {
-  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-bottom: 60px;
 }
 
 h1 {
   color:ivory;
   font-size: 90px;
   text-align: center;
+  margin-bottom: 30px;
 }
 
 p {
@@ -81,7 +82,11 @@ small {
   color:ivory;
   font-size: 40px;
   text-align: center;
-  padding: 0 20px;
+  padding: 5px 0;
+}
+
+a {
+  color: lightblue;
 }
 
 .hidden {

@@ -1,25 +1,27 @@
 
-var width = 0;    // We will scale the photo width to this
-var height = 0;     // This will be computed based on the input stream
+let width = 0;    // We will scale the photo width to this
+let height = 0;     // This will be computed based on the input stream
 
-var streaming = false;
+let streaming = false;
 
-var loader = null;
-var photo = null
-var video = null;
-var canvas = null;
-var startbutton = null;
-var retakebutton = null;
-var classifybutton = null;
-var resultspane = null;
-var tryagainbutton = null;
+let loader = null;
+let photo = null
+let video = null;
+let canvas = null;
+let startbutton = null;
+let retakebutton = null;
+let classifybutton = null;
+let resultspane = null;
+let tryagainbutton = null;
 
-var certainty = null;
-var animal = null;
-var speed = null;
+let certainty = null;
+let animal = null;
+let speed = null;
+
+let data = '';
 
 function clearphoto() {
-  var context = canvas.getContext('2d');
+  let context = canvas.getContext('2d');
   context.fillStyle = "#AAA";
   context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -33,12 +35,12 @@ function clearphoto() {
   // scroll to top
   window.scrollTo(0, 0);
 
-  var data = canvas.toDataURL('image/jpeg');
+  data = canvas.toDataURL('image/png');
   photo.setAttribute('src', data);
 }
 
 function takepicture() {
-  var context = canvas.getContext('2d');
+  let context = canvas.getContext('2d');
   if (width && height) {
     canvas.width = width;
     canvas.height = height;
@@ -50,7 +52,7 @@ function takepicture() {
     retakebutton.classList.remove("hidden");
     classifybutton.classList.remove("hidden");
 
-    var data = canvas.toDataURL('image/png');
+    data = canvas.toDataURL('image/png');
     photo.setAttribute('src', data);
   } else {
     clearphoto();
@@ -59,10 +61,15 @@ function takepicture() {
 
 function classify() {
   loader.classList.remove("hidden");
-  fetch('/classify')
+  fetch('/classify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+    body: data,
+  })
   .then(data => data.json())
   .then(data => {
-    console.log(data);
     // unhide results pane
     loader.classList.add("hidden");
     resultspane.classList.remove("hidden");
@@ -144,6 +151,5 @@ function startup() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('document is ready.');
   startup();
 });

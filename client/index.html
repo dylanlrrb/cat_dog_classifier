@@ -9,20 +9,21 @@
       <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
     </div>
     
-    <div id="title">
-      <h1>
-        Animal Classifier
-      </h1>
-      <small>
-        Photograph a 🐱 or a 🐶 
-      </small>
-      <small>
-        I will tell you which it is!
-      </small>
-    </div>
+    
     
     
     <div id="capture">
+      <div id="title">
+        <h1>
+          Animal Classifier
+        </h1>
+        <small>
+          Photograph a 🐱 or a 🐶 
+        </small>
+        <small>
+          I will tell you which it is!
+        </small>
+      </div>
       <div class="camera">
         <video id="video" class="visually-hidden">Video stream not available.</video>
       </div>
@@ -40,9 +41,11 @@
       </div>
       <p>I am <span id="certainty"></span>% sure</p>
       <p>this is a <span id="animal"></span></p>
-    <br><br><br>
+      <br><br>
       <button id="tryagainbutton">Try again</button>
-      <small>Classified in<small id="speed"></small>ms</small>
+      <br>
+      <small>Classified in <small id="speed"></small> milliseconds</small>
+      <small><a href="https://github.com/dylanlrrb/cat_dog_classifier">View project on Github</a></small>
     </div>
 
     

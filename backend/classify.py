@@ -1,11 +1,7 @@
-import os.path
-import matplotlib.pyplot as plt
 import torch
 import numpy as np
 from torch import nn
-from torch import optim
-import torch.nn.functional as F
-from torchvision import datasets, transforms, models
+from torchvision import models
 from collections import OrderedDict
 from PIL import Image
 import numpy as np
