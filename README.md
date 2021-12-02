@@ -6,7 +6,7 @@
 
 Interactive app is deployed at [https://cat-dog-classifier.onrender.com/](https://cat-dog-classifier.onrender.com/)
 
-This is a proof of concept that uses transfer learning in a camera based webapp that can classify cats and dogs
+This is a proof of concept that uses transfer learning in a camera based webapp to classify cats and dogs
 
 A convolutional neural net is trained on cat and dog images on top of a [pre-trained vgg16 model](https://neurohive.io/en/popular-networks/vgg16/) for lower level feature detection  
 
