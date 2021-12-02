@@ -6,7 +6,7 @@
 
 Interactive app is deployed at [https://cat-dog-classifier.onrender.com/](https://cat-dog-classifier.onrender.com/)
 
-This is a proof of concept that uses transfer learning in a web app that can classify cats and dogs
+This is a proof of concept that uses transfer learning in a camera based webapp that can classify cats and dogs
 
 A convolutional neural net is trained on cat and dog images on top of a [pre-trained vgg16 model](https://neurohive.io/en/popular-networks/vgg16/) for lower level feature detection  
 
@@ -22,7 +22,7 @@ A convolutional neural net is trained on cat and dog images on top of a [pre-tra
 
 
 Notes:
-- The web app is styled for mobile browsers, it is recommended that you toggle on the device toolbar in the developer tools for the best experiance
+- The webapp is styled for mobile browsers, it is recommended that you toggle on the device toolbar in the developer tools for the best experiance
 - Running `Cat_Dog_Classifier.ipynb` from start to finish will generate a new trained model for use in the classification api.
 - Doing so will overwrite the one downloaded from running the setup script. if you need the originally downloaded model again, re-run `yarn setup`
  
