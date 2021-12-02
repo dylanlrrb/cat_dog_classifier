@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "get:dataset": "python scripts/get_dataset.py",
     "setup": "bash scripts/setup.sh",
     "serve:backend": "rm -rf backend/static; cp -r client/ backend/static; python backend/main.py",
     "serve:backend:ssl": "rm -rf backend/static; cp -r client/ backend/static; python backend/main.py ssl",
