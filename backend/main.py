@@ -16,9 +16,8 @@ def index():
 
 @app.route("/classify", methods=['POST'])
 def classify_image():
-  # write image to disk
   hash = random.getrandbits(128)
-
+  # write image to disk
   data_url = request.data.decode('utf-8')
   base64_data = re.sub('^data:image/.+;base64,', '', data_url)
   byte_data = base64.b64decode(base64_data)
@@ -26,7 +25,7 @@ def classify_image():
   img = Image.open(image_data)
   img = img.convert('RGB')
   img.save(f'./backend/{hash}.jpg', 'JPEG')
-  
+  # classify image from disk
   data = classify(f'./backend/{hash}.jpg')
   # remove image from disk
   os.remove(f'./backend/{hash}.jpg')
