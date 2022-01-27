@@ -47,7 +47,7 @@ def build_network(architecture, out_features, hidden_layers, label_mapping, log_
   return model
 
 def load(filepath):
-  checkpoint = torch.load(filepath)
+  checkpoint = torch.load(filepath, map_location='cpu')
   model = build_network(checkpoint['architecture'],
                         checkpoint['out_features'],
                         checkpoint['hidden_layers'],
