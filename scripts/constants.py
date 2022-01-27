@@ -7,6 +7,6 @@ VOLUME_MAPPINGS = [
   '/model:/src',
   '/container_cache/torch:/root/.cache/torch/checkpoints'
 ]
-BUILD_PRODUCTS = ['checkpoint.pt', 'index.html']
-CHECKPOINT_VERSION = "1.1"
+BUILD_PRODUCTS = ['checkpoint.pth', 'index.html']
+CHECKPOINT_VERSION = "1.2"
 NOTEBOOK_NAME = 'Cat_Dog_Classifier.ipynb'

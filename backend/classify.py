@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from torch import nn
-from torchvision import models
+import torchvision
 from collections import OrderedDict
 from PIL import Image
 import numpy as np
@@ -10,89 +10,51 @@ import math
 import time
 
 # Load network as feature detector
-def build_network(arch="vgg16", out_features=2, hidden_layers=[1000]):
-    model = getattr(models, arch)(pretrained=True)
+def build_network(architecture, out_features, hidden_layers, label_mapping, log_model=False):
 
-    # Freeze the params from training
-    for param in model.parameters():
-        param.requires_grad = False
+  model = getattr(torchvision.models, architecture)(pretrained=True)
+  for param in model.parameters():
+    param.requires_grad = False
 
-    # Find the number of in features the classifier expects
-    try:
-        iter(model.classifier)
-    except TypeError:
-        in_features = model.classifier.in_features
-    else:
-        in_features = model.classifier[0].in_features
-    
-    hidden_layers = [in_features] + hidden_layers
-    
-    # Define how to build a hidden layer
-    layer_builder = (
-        lambda i, v: (("fc" + str(i)), nn.Linear(hidden_layers[i-1], v)),
-        lambda i, v: (("relu" + str(i)), nn.ReLU()),
-        lambda i, v: (("drop" + str(i)), nn.Dropout())
-    )
-    
-    # Loop through hidden_layers array and build a layer for each
-    layers = [f(i, v) for i, v in enumerate(hidden_layers) if i > 0 for f in layer_builder]
-    # Concat the output layer onto the network
-    layers += [('fc_final', nn.Linear(hidden_layers[-1], out_features)),
-               ('output', nn.LogSoftmax(dim=1))]
-    
-    classifier = nn.Sequential(OrderedDict(layers))
+  # Find the number of in features the classifier expects
+  try:
+      iter(model.classifier)
+  except TypeError:
+      in_features = model.classifier.in_features
+  else:
+      in_features = model.classifier[0].in_features
 
-    # Replace classifier with our classifier
-    model.classifier = classifier
+  hidden = [in_features] + hidden_layers
 
-    return model
+  layers = []
+  for i, (x, y) in enumerate(zip(hidden[:-1], hidden[1:])):
+    layers.append((f'fc{i}', nn.Linear(x, y)))
+    layers.append((f'relu{i}', nn.ReLU()))
+    layers.append((f'dropout{i}', nn.Dropout(p=0.2)))
+  layers.append(('fc_final', nn.Linear(hidden_layers[-1], out_features)))
+  layers.append(('log_output', nn.LogSoftmax(dim=1)))
 
-def load_model(path):
-    checkpoint = torch.load(path, map_location='cpu')
+  classifier = nn.Sequential(OrderedDict(layers))
+  if log_model:
+    print('Classifier:', classifier)
 
-    arch = checkpoint['arch']
-    out_features = len(checkpoint['class_to_idx'])
-    hidden_layers = checkpoint['hidden_layers']
+  classifier.out_features = out_features
+  classifier.hidden_layers = hidden_layers
+  classifier.label_mapping = label_mapping
+  model.architecture = architecture
+  
+  model.classifier = classifier
+  return model
 
-    # For loading, use the same build_network function used to make saved model's network
-    model = build_network(arch, out_features, hidden_layers)
-    model.load_state_dict(checkpoint['state_dict'])
+def load(filepath):
+  checkpoint = torch.load(filepath)
+  model = build_network(checkpoint['architecture'],
+                        checkpoint['out_features'],
+                        checkpoint['hidden_layers'],
+                        checkpoint['label_mapping'])
+  model.load_state_dict(checkpoint['state_dict'])
 
-    model.class_to_idx = checkpoint['class_to_idx']
-    
-    return model
-
-def process_image(image_path):
-    ''' Scales, crops, and normalizes a PIL image for a PyTorch model,
-        returns an Numpy array
-    '''
-    # Open the image
-    pil_image = Image.open(image_path)
-    
-    # Resize the image
-    if pil_image.size[1] < pil_image.size[0]:
-        pil_image.thumbnail((255, math.pow(255, 2)))
-    else:
-        pil_image.thumbnail((math.pow(255, 2), 255))
-                            
-    # Crop the image
-    left = (pil_image.width-224)/2
-    bottom = (pil_image.height-224)/2
-    right = left + 224
-    top = bottom + 224
-                            
-    pil_image = pil_image.crop((left, bottom, right, top))
-                            
-    # Turn into np_array
-    np_image = np.array(pil_image)/255
-    
-    # Undo mean and std then transpose
-    mean = np.array([0.485, 0.456, 0.406])
-    std = np.array([0.229, 0.224, 0.225])  
-    np_image = (np_image - mean)/std
-    np_image = np.transpose(np_image, (2, 0, 1))
-    
-    return np_image
+  return model
 
 def predict(image_path, model, topk=5):
     ''' Predict the class (or classes) of an image using a trained deep learning model.
@@ -129,17 +91,42 @@ def predict(image_path, model, topk=5):
     
     return(probs, idxs)
 
-loaded_model = load_model('./model/checkpoint.pt')
+
+loaded_model = load('./model/checkpoint.pth')
+device = torch.device("cpu")
+loaded_model.to(device)
+label_mapping = loaded_model.classifier.label_mapping
+
 
 def classify(image_path):
-  start_time = time.time()
-  # Get the probabilties and indices from passing the image through the model
-  probs, idxs = predict(image_path, loaded_model, topk=2)
-  end_time = time.time()
+    # Open the image
+    pil_image = Image.open(image_path)
+    # Resize the image
+    if pil_image.size[1] < pil_image.size[0]:
+        pil_image.thumbnail((255, math.pow(255, 2)))
+    else:
+        pil_image.thumbnail((math.pow(255, 2), 255))
+    # Crop the image
+    left = (pil_image.width-224)/2
+    bottom = (pil_image.height-224)/2
+    right = left + 224
+    top = bottom + 224                
+    pil_image = pil_image.crop((left, bottom, right, top))              
+    # Turn into np_array
+    np_image = np.array(pil_image)/255
+    np_image = np.transpose(np_image, (2, 0, 1))
 
-  return {
-    "mapping":{"0": "Cat 🐱", "1": "Dog 🐶"},
-    "ranking":list(map(lambda x: str(x) ,idxs)),
-    "certainty":list(map(lambda x: str(round(x * 100, 1)) ,probs)),
-    "speed":f"{round((end_time-start_time) * 1000)}"
-  }
+    with torch.no_grad():
+        loaded_model.eval()
+        # Turn the np_array image into a FloatTensor before running through model
+        img_tensor = torch.FloatTensor([np_image]).to(device)
+
+        start_time = time.time()
+        top_p, top_class = torch.exp(loaded_model.forward(img_tensor)).topk(len(label_mapping), dim=1)
+        end_time = time.time()
+        return {
+            "mapping":label_mapping,
+            "ranking":list(map(lambda x: str(x), top_class.squeeze().numpy())),
+            "certainty":list(map(lambda x: str(round(x * 100, 1)), top_p.squeeze().numpy())),
+            "speed":f"{round((end_time-start_time) * 1000)}"
+        }

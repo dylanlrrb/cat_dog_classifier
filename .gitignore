@@ -8,7 +8,7 @@ __pycache__/
 
 # Large directories used for storing training images
 datasets/
-checkpoint.pt
+checkpoint.pth
 # CDCI pipeline stuff
 container_cache/*/*
 !container_cache/**/README.md

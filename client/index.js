@@ -74,8 +74,17 @@ function classify() {
     loader.classList.add("hidden");
     resultspane.classList.remove("hidden");
     // fill out fields
-    certainty.innerHTML = data.certainty[0];
-    animal.innerHTML = data.mapping[data.ranking[0]];
+    certainty.innerHTML = `${data.certainty[0]}%`;
+    if (parseFloat(data.certainty[0]) < 80.0) {
+      certainty.innerHTML = 'pretty';
+      prediction.innerHTML = "there's no Cat or Dog here..."
+    } else if (data.mapping[data.ranking[0]] == 'absent') {
+      prediction.innerHTML = "there's no Cat or Dog here..."
+    } else if (data.mapping[data.ranking[0]] == 'cat') {
+      prediction.innerHTML = 'this is a Cat 🐱'
+    } else if (data.mapping[data.ranking[0]] == 'dog') {
+      prediction.innerHTML = 'this is a Dog 🐶'
+    }
     speed.innerHTML = data.speed
     // scroll to bottom
     window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
@@ -95,7 +104,7 @@ function startup() {
   resultspane = document.getElementById('resultspane');
   tryagainbutton = document.getElementById('tryagainbutton');
   certainty = document.getElementById('certainty');
-  animal = document.getElementById('animal');
+  prediction = document.getElementById('prediction');
   speed = document.getElementById('speed');
 
   navigator.mediaDevices.getUserMedia({ video: {

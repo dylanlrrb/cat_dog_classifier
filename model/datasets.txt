@@ -1,1 +1,1 @@
-https://datasets-349058029.s3.us-west-2.amazonaws.com/cat_dog_classifier/animals.zip animals v1
+https://datasets-349058029.s3.us-west-2.amazonaws.com/cat_dog_classifier/animalsV2.zip animals v2
